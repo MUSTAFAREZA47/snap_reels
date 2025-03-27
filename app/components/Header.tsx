@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useSession, signOut } from 'next-auth/react'
 import { Home, User, Upload, Search } from 'lucide-react'
 import { useNotification } from './Notification'
+import Image from 'next/image'
 
 export default function Header() {
     const { data: session } = useSession()
@@ -24,12 +25,18 @@ export default function Header() {
                 {/* Logo Section */}
                 <Link
                     href="/"
-                    className="flex items-center gap-2 text-xl font-bold hover:text-primary transition-all"
+                    className="flex items-center gap-2 text-xl font-bold transition-all"
                     onClick={() =>
                         showNotification('Welcome to Snap Reels', 'info')
                     }
                 >
-                    <Home className="w-6 h-6" />
+                    {/* <Home className="w-6 h-6" /> */}
+                    <Image
+                        src="/reel.png"
+                        alt="Snap Reels Logo"
+                        width={32}
+                        height={32}
+                    />
                     Snap Reels
                 </Link>
 
