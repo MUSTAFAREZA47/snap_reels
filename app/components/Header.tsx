@@ -1,10 +1,11 @@
 'use client'
 
-import Link from 'next/link'
+
 import { useSession, signOut } from 'next-auth/react'
-import { Home, User, Upload, Search } from 'lucide-react'
+import { User, Upload, Search } from 'lucide-react'
 import { useNotification } from './Notification'
 import Image from 'next/image'
+import Link from 'next/link'
 
 export default function Header() {
     const { data: session } = useSession()

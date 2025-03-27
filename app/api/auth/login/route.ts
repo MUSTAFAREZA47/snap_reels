@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
 
         if (!email || !password) {
             return NextResponse.json(
-                { error: 'Email and password are required' },
+                { message: 'Email and password are required' },
                 { status: 400 },
             )
         }
@@ -23,14 +23,14 @@ export async function POST(request: NextRequest) {
 
         if (!isPasswordMatch) {
             return NextResponse.json(
-                { error: 'Invalid password' },
+                { message: 'Invalid password' },
                 { status: 400 },
             )
         }
 
         return NextResponse.json({ user }, { status: 200 })
 
-    } catch (error) {
+    } catch {
         return NextResponse.json({ message: "Failed in login user"}, { status: 500 })
     }
 }
