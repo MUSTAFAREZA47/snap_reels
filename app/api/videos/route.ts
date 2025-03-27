@@ -2,7 +2,7 @@ import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/dbConnect";
 import Video, { IVideo } from "@/models/Video";
 import { getServerSession } from "next-auth";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 // Path: reels_pro/app/api/video/route.ts
 // Getting all videos
@@ -24,7 +24,7 @@ export async function GET() {
 
 // Path: reels_pro/app/api/video/route.ts
 // Creating a new video
-export async function POST(request: NextResponse) {
+export async function POST(request: NextRequest) {
     try {
         // Get the session
         const session = await getServerSession(authOptions)
