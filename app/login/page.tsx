@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useNotification } from '../components/Notification'
 import Link from 'next/link'
 import { Loader2 } from 'lucide-react'
+import { motion } from 'framer-motion'
 
 export default function Login() {
     const [email, setEmail] = useState('')
@@ -34,65 +35,135 @@ export default function Login() {
         setLoading(false)
     }
 
+    const containerVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: {
+                duration: 0.5,
+                staggerChildren: 0.1,
+            },
+        },
+    }
+
+    const itemVariants = {
+        hidden: { opacity: 0, x: -20 },
+        visible: {
+            opacity: 1,
+            x: 0,
+            transition: {
+                duration: 0.3,
+            },
+        },
+    }
+
     return (
-        <div className="max-w-md mx-auto mt-16 p-6 border rounded-lg shadow-lg bg-white">
-            <h1 className="text-3xl font-bold mb-6 text-center">Login</h1>
-            <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                    <label htmlFor="email" className="block mb-2 font-medium">
-                        Email
-                    </label>
-                    <input
-                        type="email"
-                        id="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                        className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                        placeholder="Enter your email"
-                    />
-                </div>
-                <div>
-                    <label
-                        htmlFor="password"
-                        className="block mb-2 font-medium"
-                    >
-                        Password
-                    </label>
-                    <input
-                        type="password"
-                        id="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                        placeholder="Enter your password"
-                    />
-                </div>
-                <button
-                    type="submit"
-                    className="w-full flex items-center justify-center bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300 disabled:opacity-50"
-                    disabled={loading}
+        <div className="min-h-screen flex items-center justify-center px-4 py-8 bg-gray-50 dark:bg-gray-900">
+            <motion.div
+                className="w-full max-w-md"
+                initial="hidden"
+                animate="visible"
+                variants={containerVariants}
+            >
+                <motion.div
+                    className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 md:p-8"
+                    variants={itemVariants}
                 >
-                    {loading ? (
-                        <>
-                            <Loader2 className="w-5 h-5 animate-spin mr-2" />
-                            Logging in...
-                        </>
-                    ) : (
-                        'Login'
-                    )}
-                </button>
-                <p className="text-center">
-                    Don&apos;t have an account?{' '}
-                    <Link
-                        href="/register"
-                        className="text-blue-600 hover:underline"
+                    <motion.div
+                        className="text-center mb-8"
+                        variants={itemVariants}
                     >
-                        Register
-                    </Link>
-                </p>
-            </form>
+                        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+                            Welcome Back
+                        </h1>
+                        <p className="mt-2 text-sm md:text-base text-gray-600 dark:text-gray-400">
+                            Sign in to your account
+                        </p>
+                    </motion.div>
+
+                    <motion.form
+                        onSubmit={handleSubmit}
+                        className="space-y-6"
+                        variants={itemVariants}
+                    >
+                        <motion.div
+                            className="space-y-2"
+                            variants={itemVariants}
+                        >
+                            <label
+                                htmlFor="email"
+                                className="block text-sm md:text-base font-medium text-gray-700 dark:text-gray-300"
+                            >
+                                Email
+                            </label>
+                            <input
+                                type="email"
+                                id="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                                placeholder="Enter your email"
+                                className="w-full px-4 py-2.5 text-sm md:text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-colors duration-200"
+                            />
+                        </motion.div>
+
+                        <motion.div
+                            className="space-y-2"
+                            variants={itemVariants}
+                        >
+                            <label
+                                htmlFor="password"
+                                className="block text-sm md:text-base font-medium text-gray-700 dark:text-gray-300"
+                            >
+                                Password
+                            </label>
+                            <input
+                                type="password"
+                                id="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                                placeholder="Enter your password"
+                                className="w-full px-4 py-2.5 text-sm md:text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-colors duration-200"
+                            />
+                        </motion.div>
+
+                        <motion.button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full flex items-center justify-center px-4 py-2.5 text-sm md:text-base font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            variants={itemVariants}
+                        >
+                            {loading ? (
+                                <div className="flex items-center gap-2">
+                                    <Loader2 className="w-4 h-4 md:w-5 md:h-5 animate-spin" />
+                                    <span>Signing in...</span>
+                                </div>
+                            ) : (
+                                'Sign In'
+                            )}
+                        </motion.button>
+
+                        <motion.div
+                            className="text-center"
+                            variants={itemVariants}
+                        >
+                            <p className="text-sm md:text-base text-gray-600 dark:text-gray-400">
+                                Don&apos;t have an account?{' '}
+                                <Link
+                                    href="/register"
+                                    className="font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors duration-200"
+                                >
+                                    Create account
+                                </Link>
+                            </p>
+                        </motion.div>
+                    </motion.form>
+                </motion.div>
+            </motion.div>
         </div>
     )
 }

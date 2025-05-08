@@ -7,6 +7,7 @@ import { Loader2 } from 'lucide-react'
 import { useNotification } from './Notification'
 import { apiClient } from '@/lib/api-client'
 import FileUpload from './FileUpload'
+import { motion } from 'framer-motion'
 
 interface VideoFormData {
     title: string
@@ -73,72 +74,145 @@ export default function VideoUploadForm() {
         }
     }
 
+    const formVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1,
+            },
+        },
+    }
+
+    const itemVariants = {
+        hidden: { opacity: 0, y: 10 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: {
+                duration: 0.3,
+            },
+        },
+    }
+
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            <div className="form-control">
-                <label className="label">Title</label>
+        <motion.form
+            onSubmit={handleSubmit(onSubmit)}
+            className="space-y-6"
+            variants={formVariants}
+            initial="hidden"
+            animate="visible"
+        >
+            <motion.div
+                className="space-y-2"
+                variants={itemVariants}
+            >
+                <label
+                    htmlFor="title"
+                    className="block text-sm md:text-base font-medium text-gray-700 dark:text-gray-300"
+                >
+                    Title
+                </label>
                 <input
                     type="text"
-                    className={`input input-bordered ${
-                        errors.title ? 'input-error' : ''
+                    id="title"
+                    className={`w-full px-4 py-2.5 text-sm md:text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-colors duration-200 ${
+                        errors.title ? 'border-red-500 focus:ring-red-500' : ''
                     }`}
+                    placeholder="Enter video title"
                     {...register('title', { required: 'Title is required' })}
                 />
                 {errors.title && (
-                    <span className="text-error text-sm mt-1">
+                    <motion.span
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="text-sm text-red-500"
+                    >
                         {errors.title.message}
-                    </span>
+                    </motion.span>
                 )}
-            </div>
+            </motion.div>
 
-            <div className="form-control">
-                <label className="label">Description</label>
+            <motion.div
+                className="space-y-2"
+                variants={itemVariants}
+            >
+                <label
+                    htmlFor="description"
+                    className="block text-sm md:text-base font-medium text-gray-700 dark:text-gray-300"
+                >
+                    Description
+                </label>
                 <textarea
-                    className={`textarea textarea-bordered h-24 ${
-                        errors.description ? 'textarea-error' : ''
+                    id="description"
+                    className={`w-full px-4 py-2.5 text-sm md:text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white transition-colors duration-200 min-h-[100px] ${
+                        errors.description ? 'border-red-500 focus:ring-red-500' : ''
                     }`}
+                    placeholder="Enter video description"
                     {...register('description', {
                         required: 'Description is required',
                     })}
                 />
                 {errors.description && (
-                    <span className="text-error text-sm mt-1">
+                    <motion.span
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="text-sm text-red-500"
+                    >
                         {errors.description.message}
-                    </span>
+                    </motion.span>
                 )}
-            </div>
+            </motion.div>
 
-            <div className="form-control">
-                <label className="label">Upload Video: Ratio - 1080*1920</label>
-                <FileUpload
-                    fileType="video"
-                    onSuccess={handleUploadSuccess}
-                    onProgress={handleUploadProgress}
-                />
-                {uploadProgress > 0 && (
-                    <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2">
-                        <div
-                            className="bg-primary h-2.5 rounded-full transition-all duration-300"
-                            style={{ width: `${uploadProgress}%` }}
-                        />
-                    </div>
-                )}
-            </div>
+            <motion.div
+                className="space-y-2"
+                variants={itemVariants}
+            >
+                <label
+                    className="block text-sm md:text-base font-medium text-gray-700 dark:text-gray-300"
+                >
+                    Upload Video: Ratio - 1080*1920
+                </label>
+                <div className="video-upload-container">
+                    <FileUpload
+                        fileType="video"
+                        onSuccess={handleUploadSuccess}
+                        onProgress={handleUploadProgress}
+                    />
+                    {uploadProgress > 0 && (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 mt-2"
+                        >
+                            <motion.div
+                                className="bg-blue-600 h-2.5 rounded-full"
+                                initial={{ width: 0 }}
+                                animate={{ width: `${uploadProgress}%` }}
+                                transition={{ duration: 0.3 }}
+                            />
+                        </motion.div>
+                    )}
+                </div>
+            </motion.div>
 
-            <button
+            <motion.button
                 type="submit"
-                className="btn btn-primary btn-block"
+                className="w-full flex items-center justify-center px-4 py-2.5 text-sm md:text-base font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={loading || !uploadProgress}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                variants={itemVariants}
             >
                 {loading ? (
-                    <>
-                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Publishing Video...
-                    </>
+                    <div className="flex items-center gap-2">
+                        <Loader2 className="w-4 h-4 md:w-5 md:h-5 animate-spin" />
+                        <span>Publishing Video...</span>
+                    </div>
                 ) : (
                     'Publish Video'
                 )}
-            </button>
-        </form>
+            </motion.button>
+        </motion.form>
     )
 }

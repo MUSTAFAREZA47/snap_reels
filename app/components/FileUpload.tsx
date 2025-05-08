@@ -3,7 +3,7 @@
 import { IKUpload } from 'imagekitio-next'
 import { IKUploadResponse } from 'imagekitio-next/dist/types/components/IKUpload/props'
 import { useState } from 'react'
-import { Loader2 } from 'lucide-react'
+import { Loader2, Upload } from 'lucide-react'
 
 interface FileUploadProps {
     onSuccess: (res: IKUploadResponse) => void
@@ -69,28 +69,42 @@ export default function FileUpload({
     }
 
     return (
-        <div className="space-y-2">
-            <IKUpload
-                fileName={fileType === 'video' ? 'video' : 'image'}
-                onError={onError}
-                onSuccess={handleSuccess}
-                onUploadStart={handleStartUpload}
-                onUploadProgress={handleProgress}
-                accept={fileType === 'video' ? 'video/*' : 'image/*'}
-                className="file-input file-input-bordered w-full"
-                validateFile={validateFile}
-                useUniqueFileName={true}
-                folder={fileType === 'video' ? '/videos' : '/images'}
-            />
+        <div className="space-y-2 w-full">
+            <div className="relative">
+                <IKUpload
+                    fileName={fileType === 'video' ? 'video' : 'image'}
+                    onError={onError}
+                    onSuccess={handleSuccess}
+                    onUploadStart={handleStartUpload}
+                    onUploadProgress={handleProgress}
+                    accept={fileType === 'video' ? 'video/*' : 'image/*'}
+                    className="file-input file-input-bordered w-full h-12 md:h-14 text-sm md:text-base"
+                    validateFile={validateFile}
+                    useUniqueFileName={true}
+                    folder={fileType === 'video' ? '/videos' : '/images'}
+                />
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div className="flex items-center gap-2 text-gray-500">
+                        <Upload className="w-4 h-4 md:w-5 md:h-5" />
+                        <span className="text-sm md:text-base">
+                            {fileType === 'video' ? 'Upload Video' : 'Upload Image'}
+                        </span>
+                    </div>
+                </div>
+            </div>
 
             {uploading && (
-                <div className="flex items-center gap-2 text-sm text-primary">
-                    <Loader2 className="w-4 h-4 animate-spin" />
+                <div className="flex items-center gap-2 text-sm md:text-base text-primary">
+                    <Loader2 className="w-4 h-4 md:w-5 md:h-5 animate-spin" />
                     <span>Uploading...</span>
                 </div>
             )}
 
-            {error && <div className="text-error text-sm">{error}</div>}
+            {error && (
+                <div className="text-error text-sm md:text-base bg-error/10 p-2 rounded-md">
+                    {error}
+                </div>
+            )}
         </div>
     )
 }
